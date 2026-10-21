@@ -1,0 +1,321 @@
+/* Campus Finder: estilos base neumórficos */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+}
+
+.login-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.login-card {
+    padding: 48px 40px;
+    border-radius: 32px;
+    background: #e0e5ec;
+    box-shadow: 20px 20px 60px #bec3cf, -20px -20px 60px #ffffff;
+    transition: box-shadow .2s ease;
+}
+
+.login-header { text-align: center; margin-bottom: 40px; }
+
+.neu-icon {
+    width: 80px; height: 80px;
+    margin: 0 auto 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: #e0e5ec;
+    box-shadow: 9px 9px 16px #bec3cf, -9px -9px 16px #ffffff;
+    transition: transform .2s ease;
+}
+.icon-inner {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: inset 4px 4px 8px #bec3cf, inset -4px -4px 8px #ffffff;
+}
+.icon-inner svg { width: 22px; height: 22px; }
+
+.form-group { margin-bottom: 26px; }
+
+.input-group { position: relative; }
+
+.neu-input {
+    display: flex;
+    align-items: center;
+    border-radius: 16px;
+    background: #e0e5ec;
+    box-shadow: inset 6px 6px 12px #bec3cf, inset -6px -6px 12px #ffffff;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+.neu-input:focus-within {
+    box-shadow: inset 8px 8px 16px #bec3cf, inset -8px -8px 16px #ffffff;
+}
+
+.neu-input input {
+    flex: 1;
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #3d4468;
+    font-size: 16px;
+    padding: 22px 8px 8px 20px;
+}
+
+.neu-input label {
+    position: absolute;
+    left: 20px; top: 50%;
+    transform: translateY(-50%);
+    color: #9499b7;
+    font-size: 15px;
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all .2s ease;
+}
+.neu-input input:focus + label,
+.neu-input input:not(:placeholder-shown) + label {
+    top: 14px;
+    transform: none;
+    font-size: 11px;
+    color: #6c7293;
+}
+
+.input-icon {
+    display: flex; align-items: center;
+    padding: 0 18px 0 6px;
+    color: #9499b7;
+}
+.input-icon svg { width: 20px; height: 20px; }
+
+.neu-toggle {
+    width: 36px; height: 36px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: #e0e5ec;
+    color: #6c7293;
+    cursor: pointer;
+    box-shadow: 3px 3px 6px #bec3cf, -3px -3px 6px #ffffff;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+.neu-toggle:active { box-shadow: inset 2px 2px 4px #bec3cf, inset -2px -2px 4px #ffffff; }
+
+.neu-button {
+    position: relative;
+    width: 100%;
+    border: none;
+    border-radius: 16px;
+    background: #e0e5ec;
+    color: #3d4468;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 8px 8px 16px #bec3cf, -8px -8px 16px #ffffff;
+    transition: box-shadow .2s ease, transform .2s ease;
+}
+.neu-button:hover { transform: translateY(-1px); }
+.neu-button:active {
+    box-shadow: inset 6px 6px 12px #bec3cf, inset -6px -6px 12px #ffffff;
+    transform: none;
+}
+.neu-button:disabled { cursor: wait; }
+
+.btn-loader { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; }
+.neu-button.loading .btn-text { visibility: hidden; }
+.neu-button.loading .btn-loader { display: flex; }
+.neu-spinner {
+    width: 22px; height: 22px;
+    border: 3px solid #bec3cf;
+    border-top-color: #6c7293;
+    border-radius: 50%;
+    animation: neu-spin .8s linear infinite;
+}
+@keyframes neu-spin { to { transform: rotate(360deg); } }
+
+
+/* Campus Finder: adaptaciones del formulario */
+
+body {
+    background: #e0e5ec;
+    color: #3d4468;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 460px;
+}
+
+.login-header h1 {
+    color: #3d4468;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.login-header > p {
+    color: #777f9e;
+    font-size: 14px;
+}
+
+.login-header .login-subtitle {
+    margin-top: 12px;
+    font-size: 13px;
+}
+
+.login-header .neu-icon {
+    color: #6c7293;
+}
+
+.input-group.neu-input {
+    min-height: 62px;
+}
+
+.neu-input input {
+    min-height: 62px;
+    padding-right: 55px;
+}
+
+.neu-input label {
+    max-width: calc(100% - 90px);
+}
+
+.password-group {
+    padding-right: 48px;
+}
+
+.password-group input {
+    padding-right: 5px;
+}
+
+.password-toggle {
+    z-index: 2;
+}
+
+.password-toggle svg {
+    width: 18px;
+    height: 18px;
+}
+
+.password-toggle .eye-closed {
+    display: none;
+}
+
+.password-toggle.show-password .eye-open {
+    display: none;
+}
+
+.password-toggle.show-password .eye-closed {
+    display: block;
+}
+
+.login-btn {
+    min-height: 58px;
+    margin-top: 12px;
+}
+
+.server-error {
+    margin-bottom: 22px;
+    padding: 13px 16px;
+    border-radius: 12px;
+    background: #f8dfe4;
+    color: #a32e49;
+    font-size: 13px;
+    line-height: 1.6;
+    box-shadow:
+        inset 3px 3px 7px #dfc8ce,
+        inset -3px -3px 7px #ffffff;
+}
+
+.campus-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 28px;
+    color: #777f9e;
+    font-size: 12px;
+    text-align: center;
+}
+
+.campus-note span {
+    color: #6c7293;
+}
+
+.signup-link {
+    margin-top: 28px;
+    text-align: center;
+}
+
+.signup-link p {
+    color: #9499b7;
+    font-size: 11px;
+}
+
+.login-form button:focus-visible,
+.neu-input input:focus-visible {
+    outline: 2px solid #6c7293;
+    outline-offset: 4px;
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 16px;
+    }
+
+    .login-card {
+        padding: 35px 25px;
+        border-radius: 24px;
+    }
+
+    .login-header h1 {
+        font-size: 1.7rem;
+    }
+
+    .login-header {
+        margin-bottom: 32px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Registro y enlaces alternos */
+.alt-link {
+    margin-top: 24px;
+    text-align: center;
+    color: #777f9e;
+    font-size: 13px;
+}
+
+.alt-link a {
+    color: #3d4468;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.alt-link a:hover { text-decoration: underline; }
+
+.field-error {
+    margin: 8px 6px 0;
+    color: #a32e49;
+    font-size: 12px;
+    line-height: 1.5;
+}

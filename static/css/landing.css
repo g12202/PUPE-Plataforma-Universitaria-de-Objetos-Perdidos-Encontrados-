@@ -1,0 +1,47 @@
+/* PUPE: página de inicio (usa las variables de app.css) */
+body.landing { display: block; padding: 0 24px; }
+
+.l-nav, main, .l-foot { max-width: 1120px; margin: 0 auto; }
+.l-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 0; }
+.l-links { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+.l-links a:not(.neu-button) { text-decoration: none; color: var(--muted); font-weight: 500; }
+.l-links a:not(.neu-button):hover { color: var(--text); }
+
+.hero { display: grid; grid-template-columns: 1.2fr .8fr; gap: 40px; align-items: center; padding: 48px 0 40px; }
+.eyebrow { color: var(--muted); font-size: 13px; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 14px; }
+.hero h1 { font-size: clamp(2rem, 4.4vw, 3.2rem); line-height: 1.12; margin-bottom: 18px; }
+.lead { color: var(--muted); font-size: 1.1rem; max-width: 520px; margin-bottom: 28px; }
+.cta { display: flex; gap: 16px; flex-wrap: wrap; }
+.cta .neu-button { padding: 16px 28px; }
+
+.hero-art { display: flex; justify-content: center; }
+.orb {
+    width: min(300px, 70vw); aspect-ratio: 1; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent); background: var(--bg);
+    box-shadow: 18px 18px 36px var(--sh-dark), -18px -18px 36px var(--sh-light);
+}
+.orb svg { width: 46%; padding: 14%; border-radius: 50%; box-shadow: var(--in); width: 56%; height: 56%; }
+
+.l-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 22px; margin: 16px 0 24px; }
+.l-section { padding: 40px 0 8px; }
+.l-section h2 { font-size: 1.5rem; margin-bottom: 22px; }
+
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; }
+.step { display: flex; flex-direction: column; gap: 8px; }
+.step-n {
+    width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; color: var(--accent); box-shadow: var(--in);
+}
+
+.final { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 40px 20px; }
+.final h2 { margin: 0; }
+.final .neu-button { margin-top: 10px; padding: 16px 28px; }
+
+.l-foot { text-align: center; color: #9499b7; font-size: 12px; padding: 56px 0 32px; }
+
+@media (max-width: 800px) {
+    .hero { grid-template-columns: 1fr; padding-top: 16px; }
+    .hero-art { order: -1; }
+    .orb { width: 180px; }
+}

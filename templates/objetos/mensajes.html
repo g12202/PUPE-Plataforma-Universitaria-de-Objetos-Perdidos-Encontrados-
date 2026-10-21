@@ -1,0 +1,14 @@
+{% extends "base_app.html" %}
+{% block title %}Mensajes{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Mensajes</h1><p class="muted">Personas que escribieron sobre tus reportes.</p></div></div>
+{% for m in mensajes %}
+    <article class="card msg">
+        <header><strong>{{ m.autor.username }}</strong>
+            <span class="muted small">sobre <a href="{{ m.objeto.get_absolute_url }}">{{ m.objeto.titulo }}</a> · {{ m.creado|date:"d M, H:i" }}</span></header>
+        <p>{{ m.texto|linebreaksbr }}</p>
+    </article>
+{% empty %}
+    <div class="card empty">No tienes mensajes.</div>
+{% endfor %}
+{% endblock %}

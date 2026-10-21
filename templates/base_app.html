@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Panel{% endblock %} | PUPE</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    {% block head %}{% endblock %}
+</head>
+<body class="app">
+
+<aside class="sidebar" id="sidebar">
+    <a class="brand" href="{% url 'home' %}">
+        <span class="neu-icon sm"><span class="icon-inner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+        </span></span>
+        <span>PUPE</span>
+    </a>
+
+    <nav class="nav" aria-label="Principal">
+        <a href="{% url 'objetos:dashboard' %}" class="{% if seccion == 'dashboard' %}active{% endif %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+            Inicio
+        </a>
+        <a href="{% url 'objetos:buscar' %}" class="{% if seccion == 'buscar' %}active{% endif %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            Buscar objetos
+        </a>
+        <a href="{% url 'objetos:mapa' %}" class="{% if seccion == 'mapa' %}active{% endif %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            Mapa
+        </a>
+        <a href="{% url 'objetos:reportar' %}" class="{% if seccion == 'reportar' %}active{% endif %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+            Reportar objeto
+        </a>
+        <a href="{% url 'objetos:mis_reportes' %}" class="{% if seccion == 'mis_reportes' %}active{% endif %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h9"/></svg>
+            Mis reportes
+        </a>
+        <a href="{% url 'objetos:mensajes' %}" class="{% if seccion == 'mensajes' %}active{% endif %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            Mensajes
+            {% if sin_leer %}<span class="badge">{{ sin_leer }}</span>{% endif %}
+        </a>
+        {% if user.is_staff %}
+        <a href="{% url 'admin:index' %}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
+            Administración
+        </a>
+        {% endif %}
+    </nav>
+
+    <div class="side-user">
+        <div class="avatar">{{ user.username|slice:":1"|upper }}</div>
+        <div class="who">
+            <strong>{{ user.username }}</strong>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="link-btn">Cerrar sesión</button>
+            </form>
+        </div>
+    </div>
+</aside>
+
+<div class="main">
+    <header class="topbar">
+        <button class="menu-btn neu-toggle" id="menuBtn" aria-label="Abrir menú" aria-controls="sidebar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <form class="top-search" action="{% url 'objetos:buscar' %}" method="get" role="search">
+            <div class="neu-field">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                <input type="search" name="q" placeholder="Buscar mochila, llaves, credencial…" aria-label="Buscar objetos">
+            </div>
+        </form>
+        <a class="neu-button btn-sm" href="{% url 'objetos:reportar' %}">+ Reportar</a>
+    </header>
+
+    <main class="content">
+        {% if messages %}
+            {% for m in messages %}
+                <div class="flash {{ m.tags }}" role="status">{{ m }}</div>
+            {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+</div>
+
+<script>
+    const sb = document.getElementById("sidebar");
+    document.getElementById("menuBtn").addEventListener("click", () => sb.classList.toggle("open"));
+    document.querySelector(".main").addEventListener("click", () => sb.classList.remove("open"));
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

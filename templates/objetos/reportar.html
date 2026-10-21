@@ -1,0 +1,92 @@
+{% extends "base_app.html" %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block head %}<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>{{ titulo }}</h1><p class="muted">Mientras más detalles des, más fácil será encontrarlo.</p></div></div>
+
+<form class="card form-card" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="server-error">{{ form.non_field_errors }}</div>{% endif %}
+
+    <fieldset class="tipo-switch">
+        <legend>¿Qué ocurrió?</legend>
+        {% for r in form.tipo %}
+            <label class="tipo-opt {{ r.data.value }}">{{ r.tag }}<span>{% if r.data.value == 'perdido' %}Perdí un objeto{% else %}Encontré un objeto{% endif %}</span></label>
+        {% endfor %}
+        {% for e in form.tipo.errors %}<p class="field-error">{{ e }}</p>{% endfor %}
+    </fieldset>
+
+    <div class="form-row">
+        <div class="field">
+            <label for="{{ form.titulo.id_for_label }}">Título</label>
+            <div class="neu-field">{{ form.titulo }}</div>
+            {% for e in form.titulo.errors %}<p class="field-error">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="field">
+            <label for="{{ form.categoria.id_for_label }}">Categoría</label>
+            <div class="neu-field">{{ form.categoria }}</div>
+            {% for e in form.categoria.errors %}<p class="field-error">{{ e }}</p>{% endfor %}
+        </div>
+    </div>
+
+    <div class="field">
+        <label for="{{ form.descripcion.id_for_label }}">Descripción</label>
+        <div class="neu-field">{{ form.descripcion }}</div>
+        {% for e in form.descripcion.errors %}<p class="field-error">{{ e }}</p>{% endfor %}
+    </div>
+
+    <div class="form-row">
+        <div class="field">
+            <label for="{{ form.lugar.id_for_label }}">Lugar</label>
+            <div class="neu-field">{{ form.lugar }}</div>
+            {% for e in form.lugar.errors %}<p class="field-error">{{ e }}</p>{% endfor %}
+        </div>
+        <div class="field">
+            <label for="{{ form.fecha.id_for_label }}">Fecha</label>
+            <div class="neu-field">{{ form.fecha }}</div>
+            {% for e in form.fecha.errors %}<p class="field-error">{{ e }}</p>{% endfor %}
+        </div>
+    </div>
+
+    <div class="field">
+        <label>Ubicación en el mapa <span class="muted small">(toca el mapa para marcar el punto)</span></label>
+        <div class="card map-card inset"><div id="map" class="map small-map"></div></div>
+        {{ form.latitud }}{{ form.longitud }}
+        <button type="button" class="link-btn" id="clearPin">Quitar marcador</button>
+    </div>
+
+    <div class="field">
+        <label for="{{ form.foto.id_for_label }}">Foto (opcional)</label>
+        <div class="neu-field">{{ form.foto }}</div>
+        {% for e in form.foto.errors %}<p class="field-error">{{ e }}</p>{% endfor %}
+    </div>
+
+    <div class="actions">
+        <a class="neu-button btn-sm ghost" href="{% url 'objetos:dashboard' %}">Cancelar</a>
+        <button class="neu-button btn-sm primary" type="submit">Publicar reporte</button>
+    </div>
+</form>
+{% endblock %}
+{% block scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    const latEl = document.getElementById("{{ form.latitud.id_for_label }}");
+    const lngEl = document.getElementById("{{ form.longitud.id_for_label }}");
+    const hasPin = latEl.value && lngEl.value;
+    const start = hasPin ? [parseFloat(latEl.value), parseFloat(lngEl.value)] : [{{ centro.0 }}, {{ centro.1 }}];
+    const map = L.map("map").setView(start, 16);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "&copy; OpenStreetMap" }).addTo(map);
+    let pin = null;
+    function setPin(ll) {
+        if (pin) pin.setLatLng(ll); else pin = L.marker(ll).addTo(map);
+        latEl.value = ll.lat.toFixed(6);
+        lngEl.value = ll.lng.toFixed(6);
+    }
+    if (hasPin) setPin(L.latLng(start[0], start[1]));
+    map.on("click", (e) => setPin(e.latlng));
+    document.getElementById("clearPin").addEventListener("click", () => {
+        if (pin) { map.removeLayer(pin); pin = null; }
+        latEl.value = ""; lngEl.value = "";
+    });
+</script>
+{% endblock %}

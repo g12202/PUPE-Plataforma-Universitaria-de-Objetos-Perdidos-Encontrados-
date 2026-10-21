@@ -1,0 +1,18 @@
+<a class="card obj-card" href="{{ o.get_absolute_url }}">
+    <div class="obj-img">
+        {% if o.foto %}
+            <img src="{{ o.foto.url }}" alt="{{ o.titulo }}" loading="lazy">
+        {% else %}
+            <span class="no-img" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
+            </span>
+        {% endif %}
+        <span class="tag {{ o.tipo }}">{{ o.get_tipo_display }}</span>
+        {% if o.estado == 'recuperado' %}<span class="tag recuperado">Recuperado</span>{% endif %}
+    </div>
+    <div class="obj-body">
+        <h3>{{ o.titulo }}</h3>
+        <p class="muted">{{ o.get_categoria_display }} · {{ o.lugar }}</p>
+        <p class="muted small">{{ o.fecha|date:"d M Y" }}</p>
+    </div>
+</a>

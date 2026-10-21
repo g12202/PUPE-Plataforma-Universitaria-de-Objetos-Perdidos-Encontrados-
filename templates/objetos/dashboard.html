@@ -1,0 +1,46 @@
+{% extends "base_app.html" %}
+{% block title %}Inicio{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h1>Hola, {{ user.username }}</h1>
+        <p class="muted">Esto es lo que está pasando en el campus.</p>
+    </div>
+</div>
+
+<section class="stats">
+    <div class="card stat"><span class="num lost">{{ stats.perdidos }}</span><span>Objetos perdidos</span></div>
+    <div class="card stat"><span class="num found">{{ stats.encontrados }}</span><span>Objetos encontrados</span></div>
+    <div class="card stat"><span class="num ok">{{ stats.recuperados }}</span><span>Recuperados</span></div>
+    <div class="card stat"><span class="num">{{ stats.mios }}</span><span>Mis reportes</span></div>
+</section>
+
+<section class="quick">
+    <a class="card quick-item" href="{% url 'objetos:reportar' %}?tipo=perdido"><strong>Perdí algo</strong><span class="muted">Publica qué perdiste y dónde</span></a>
+    <a class="card quick-item" href="{% url 'objetos:reportar' %}?tipo=encontrado"><strong>Encontré algo</strong><span class="muted">Ayuda a que vuelva a su dueño</span></a>
+    <a class="card quick-item" href="{% url 'objetos:mapa' %}"><strong>Ver mapa</strong><span class="muted">Ubica reportes en el campus</span></a>
+    <a class="card quick-item" href="{% url 'objetos:buscar' %}"><strong>Buscar</strong><span class="muted">Filtra por tipo y categoría</span></a>
+</section>
+
+<div class="two-col">
+    <section>
+        <div class="section-head"><h2>Reportes recientes</h2><a href="{% url 'objetos:buscar' %}">Ver todos</a></div>
+        {% if recientes %}
+            <div class="grid">{% for o in recientes %}{% include "objetos/_tarjeta.html" %}{% endfor %}</div>
+        {% else %}
+            <div class="card empty">Aún no hay reportes. ¡Sé la primera persona en publicar uno!</div>
+        {% endif %}
+    </section>
+
+    <aside>
+        <div class="section-head"><h2>Por categoría</h2></div>
+        <div class="card">
+            {% for c in categorias %}
+                <a class="cat-row" href="{% url 'objetos:buscar' %}?categoria={{ c.clave }}"><span>{{ c.nombre }}</span><strong>{{ c.total }}</strong></a>
+            {% empty %}
+                <p class="muted">Sin datos todavía.</p>
+            {% endfor %}
+        </div>
+    </aside>
+</div>
+{% endblock %}

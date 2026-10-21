@@ -1,0 +1,10 @@
+{% extends "base_app.html" %}
+{% block title %}Mis reportes{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Mis reportes</h1><p class="muted">Administra lo que has publicado.</p></div></div>
+{% if objetos %}
+    <div class="grid">{% for o in objetos %}{% include "objetos/_tarjeta.html" %}{% endfor %}</div>
+{% else %}
+    <div class="card empty">Todavía no has publicado nada. <a href="{% url 'objetos:reportar' %}">Crear mi primer reporte</a></div>
+{% endif %}
+{% endblock %}

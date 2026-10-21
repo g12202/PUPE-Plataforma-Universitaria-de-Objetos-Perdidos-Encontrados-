@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PUPE | Registro</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <script src="{% static 'js/login.js' %}" defer></script>
+</head>
+<body>
+    <main class="login-container">
+        <section class="login-card">
+            <header class="login-header">
+                <div class="neu-icon">
+                    <div class="icon-inner">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M8 12h8M12 8l4 4-4 4"/>
+                        </svg>
+                    </div>
+                </div>
+                <h1>PUPE</h1>
+                <p>CIUDAD UNIVERSITARIA 2</p>
+                <p class="login-subtitle">Crea tu cuenta PUPE</p>
+            </header>
+
+            {% if form.non_field_errors %}
+                <div class="server-error" role="alert">
+                    {% for e in form.non_field_errors %}{{ e }} {% endfor %}
+                </div>
+            {% endif %}
+
+            <form class="login-form" method="post" action="{% url 'registro' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <div class="input-group neu-input">
+                        <input type="text" id="matricula" name="username"
+                               autocomplete="username" placeholder=" "
+                               maxlength="150" autofocus
+                               required
+                               value="{{ form.username.value|default:'' }}">
+                        <label for="matricula">Matrícula BUAP</label>
+                        <div class="input-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M6 16c0-2 6-2 6 0M14 9h4M14 13h4"/></svg></div>
+                    </div>
+                    {% for e in form.username.errors %}<p class="field-error">{{ e }}</p>{% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group neu-input">
+                        <input type="password" id="password1" name="password1"
+                               autocomplete="new-password" placeholder=" "
+                               required>
+                        <label for="password1">Contraseña</label>
+                        <div class="input-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+                    </div>
+                    {% for e in form.password1.errors %}<p class="field-error">{{ e }}</p>{% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group neu-input">
+                        <input type="password" id="password2" name="password2"
+                               autocomplete="new-password" placeholder=" "
+                               required>
+                        <label for="password2">Confirmar contraseña</label>
+                        <div class="input-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+                    </div>
+                    {% for e in form.password2.errors %}<p class="field-error">{{ e }}</p>{% endfor %}
+                </div>
+
+                <button type="submit" class="neu-button login-btn">
+                    <span class="btn-text">Crear nueva cuenta</span>
+                    <span class="btn-loader" aria-hidden="true"><span class="neu-spinner"></span></span>
+                </button>
+            </form>
+
+            <p class="alt-link">
+                ¿Ya tienes cuenta PUPE? <a href="{% url 'login' %}">Inicia sesión</a>
+            </p>
+
+            <footer class="signup-link">
+                <p>PUPE · Recuperemos juntos lo perdido.</p>
+            </footer>
+        </section>
+    </main>
+</body>
+</html>

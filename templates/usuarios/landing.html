@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PUPE | Encuentra tus objetos</title>
+    <meta name="description" content="PUPE: plataforma de objetos perdidos y encontrados de Ciudad Universitaria 2, BUAP.">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+</head>
+<body class="landing">
+
+<header class="l-nav">
+    <a class="brand" href="{% url 'home' %}">
+        <span class="neu-icon sm"><span class="icon-inner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8l4 4-4 4"/></svg>
+        </span></span>
+        <span>PUPE</span>
+    </a>
+    <nav class="l-links" aria-label="Principal">
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#recientes">Recientes</a>
+        {% if user.is_authenticated %}
+            <a class="neu-button btn-sm" href="{% url 'objetos:dashboard' %}">Ir a mi panel</a>
+        {% else %}
+            <a href="{% url 'login' %}">Iniciar sesión</a>
+            <a class="neu-button btn-sm" href="{% url 'registro' %}">Crear cuenta</a>
+        {% endif %}
+    </nav>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="hero-text">
+            <p class="eyebrow">Ciudad Universitaria 2 · BUAP</p>
+            <h1>Lo que perdiste puede estar a un mensaje de distancia.</h1>
+            <p class="lead">PUPE conecta a quienes perdieron algo con quienes lo encontraron. Reporta, busca en el mapa y recupera tus pertenencias dentro del campus.</p>
+            <div class="cta">
+                {% if user.is_authenticated %}
+                    <a class="neu-button primary" href="{% url 'objetos:reportar' %}">Reportar un objeto</a>
+                    <a class="neu-button" href="{% url 'objetos:buscar' %}">Buscar objetos</a>
+                {% else %}
+                    <a class="neu-button primary" href="{% url 'registro' %}">Comenzar ahora</a>
+                    <a class="neu-button" href="{% url 'login' %}">Ya tengo cuenta</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="hero-art" aria-hidden="true">
+            <div class="orb">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            </div>
+        </div>
+    </section>
+
+    <section class="l-stats" aria-label="Estadísticas">
+        <div class="card stat"><span class="num lost">{{ perdidos }}</span><span>Objetos perdidos</span></div>
+        <div class="card stat"><span class="num found">{{ encontrados }}</span><span>Objetos encontrados</span></div>
+        <div class="card stat"><span class="num ok">{{ recuperados }}</span><span>Ya recuperados</span></div>
+    </section>
+
+    <section id="como-funciona" class="l-section">
+        <h2>Cómo funciona</h2>
+        <div class="steps">
+            <div class="card step"><span class="step-n">1</span><h3>Reporta</h3><p class="muted">Publica lo que perdiste o encontraste con una descripción, foto y el punto en el mapa.</p></div>
+            <div class="card step"><span class="step-n">2</span><h3>Busca</h3><p class="muted">Filtra por categoría y tipo, o revisa el mapa del campus para ubicar reportes cercanos.</p></div>
+            <div class="card step"><span class="step-n">3</span><h3>Reclama</h3><p class="muted">Escribe al reportante con detalles que demuestren que es tuyo y coordinen la entrega.</p></div>
+        </div>
+    </section>
+
+    <section id="recientes" class="l-section">
+        <h2>Reportes recientes</h2>
+        {% if recientes %}
+            <div class="grid">
+                {% for o in recientes %}
+                    {% if user.is_authenticated %}
+                        {% include "objetos/_tarjeta.html" %}
+                    {% else %}
+                        <a class="card obj-card" href="{% url 'login' %}?next={{ o.get_absolute_url|urlencode }}">
+                            <div class="obj-img">
+                                <span class="no-img" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></span>
+                                <span class="tag {{ o.tipo }}">{{ o.get_tipo_display }}</span>
+                            </div>
+                            <div class="obj-body"><h3>{{ o.titulo }}</h3><p class="muted">{{ o.get_categoria_display }} · {{ o.lugar }}</p><p class="muted small">Inicia sesión para ver el detalle</p></div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="card empty">Todavía no hay reportes. Sé la primera persona en publicar uno.</div>
+        {% endif %}
+    </section>
+
+    {% if not user.is_authenticated %}
+    <section class="l-section">
+        <div class="card final">
+            <h2>¿Listo para recuperar lo tuyo?</h2>
+            <p class="muted">Acceso exclusivo para la comunidad universitaria de CU2 BUAP.</p>
+            <a class="neu-button primary" href="{% url 'registro' %}">Crear mi cuenta PUPE</a>
+        </div>
+    </section>
+    {% endif %}
+</main>
+
+<footer class="l-foot">PUPE · Recuperemos juntos lo perdido.</footer>
+</body>
+</html>

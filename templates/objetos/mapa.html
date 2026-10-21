@@ -1,0 +1,36 @@
+{% extends "base_app.html" %}
+{% block title %}Mapa{% endblock %}
+{% block head %}<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div><h1>Mapa del campus</h1><p class="muted">Reportes activos con ubicación.</p></div>
+    <div class="legend"><span class="dot perdido"></span> Perdido <span class="dot encontrado"></span> Encontrado</div>
+</div>
+<div class="card map-card"><div id="map" class="map" role="application" aria-label="Mapa de objetos"></div></div>
+{{ datos|json_script:"datos-mapa" }}
+{% endblock %}
+{% block scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    const datos = JSON.parse(document.getElementById("datos-mapa").textContent);
+    const map = L.map("map").setView([{{ centro.0 }}, {{ centro.1 }}], 16);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19, attribution: "&copy; OpenStreetMap"
+    }).addTo(map);
+
+    const colores = { perdido: "#c4506b", encontrado: "#3f9d78" };
+    const esc = (t) => { const d = document.createElement("div"); d.textContent = t; return d.innerHTML; };
+    const puntos = datos.map((o) => {
+        const m = L.circleMarker([o.lat, o.lng], {
+            radius: 11, color: "#fff", weight: 3,
+            fillColor: colores[o.tipo], fillOpacity: 1
+        }).addTo(map);
+        m.bindPopup(
+            "<strong>" + esc(o.titulo) + "</strong><br>" + esc(o.categoria) +
+            " · " + esc(o.lugar) + '<br><a href="' + o.url + '">Ver detalle</a>'
+        );
+        return m.getLatLng();
+    });
+    if (puntos.length) map.fitBounds(L.latLngBounds(puntos).pad(0.3), { maxZoom: 17 });
+</script>
+{% endblock %}

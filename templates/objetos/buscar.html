@@ -1,0 +1,45 @@
+{% extends "base_app.html" %}
+{% block title %}Buscar{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Buscar objetos</h1><p class="muted">{{ pagina.paginator.count }} resultado{{ pagina.paginator.count|pluralize:"s" }}</p></div></div>
+
+<form class="card filters" method="get">
+    <div class="neu-field grow">
+        <input type="search" name="q" value="{{ q }}" placeholder="Palabra clave" aria-label="Palabra clave">
+    </div>
+    <div class="neu-field">
+        <select name="tipo" aria-label="Tipo">
+            <option value="">Perdidos y encontrados</option>
+            <option value="perdido" {% if tipo == 'perdido' %}selected{% endif %}>Perdidos</option>
+            <option value="encontrado" {% if tipo == 'encontrado' %}selected{% endif %}>Encontrados</option>
+        </select>
+    </div>
+    <div class="neu-field">
+        <select name="categoria" aria-label="Categoría">
+            <option value="">Todas las categorías</option>
+            {% for v, n in categorias %}<option value="{{ v }}" {% if categoria == v %}selected{% endif %}>{{ n }}</option>{% endfor %}
+        </select>
+    </div>
+    <div class="neu-field">
+        <select name="estado" aria-label="Estado">
+            <option value="activo" {% if estado == 'activo' %}selected{% endif %}>Activos</option>
+            <option value="recuperado" {% if estado == 'recuperado' %}selected{% endif %}>Recuperados</option>
+            <option value="" {% if not estado %}selected{% endif %}>Todos</option>
+        </select>
+    </div>
+    <button class="neu-button btn-sm" type="submit">Filtrar</button>
+</form>
+
+{% if pagina %}
+    <div class="grid">{% for o in pagina %}{% include "objetos/_tarjeta.html" %}{% endfor %}</div>
+    {% if pagina.has_other_pages %}
+    <nav class="pager" aria-label="Paginación">
+        {% if pagina.has_previous %}<a class="neu-button btn-sm" href="?{{ querystring }}&page={{ pagina.previous_page_number }}">← Anterior</a>{% endif %}
+        <span class="muted">Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span>
+        {% if pagina.has_next %}<a class="neu-button btn-sm" href="?{{ querystring }}&page={{ pagina.next_page_number }}">Siguiente →</a>{% endif %}
+    </nav>
+    {% endif %}
+{% else %}
+    <div class="card empty">No encontramos objetos con esos filtros.</div>
+{% endif %}
+{% endblock %}

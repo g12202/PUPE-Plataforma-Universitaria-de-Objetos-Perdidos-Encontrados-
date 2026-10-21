@@ -1,0 +1,69 @@
+{% extends "base_app.html" %}
+{% block title %}{{ objeto.titulo }}{% endblock %}
+{% block head %}{% if objeto.tiene_ubicacion %}<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">{% endif %}{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <a class="muted small" href="{% url 'objetos:buscar' %}">← Volver a la búsqueda</a>
+        <h1>{{ objeto.titulo }}</h1>
+        <p><span class="tag inline {{ objeto.tipo }}">{{ objeto.get_tipo_display }}</span>
+        {% if objeto.estado == 'recuperado' %}<span class="tag inline recuperado">Recuperado</span>{% endif %}</p>
+    </div>
+</div>
+
+<div class="two-col detail">
+    <section class="card">
+        {% if objeto.foto %}<img class="detail-img" src="{{ objeto.foto.url }}" alt="{{ objeto.titulo }}">{% endif %}
+        <p class="desc">{{ objeto.descripcion|linebreaksbr }}</p>
+        <dl class="meta">
+            <div><dt>Categoría</dt><dd>{{ objeto.get_categoria_display }}</dd></div>
+            <div><dt>Lugar</dt><dd>{{ objeto.lugar }}</dd></div>
+            <div><dt>Fecha</dt><dd>{{ objeto.fecha|date:"d \d\e F \d\e Y" }}</dd></div>
+            <div><dt>Publicado por</dt><dd>{{ objeto.reportado_por.username }}</dd></div>
+        </dl>
+        {% if objeto.tiene_ubicacion %}
+            <div class="card map-card inset"><div id="map" class="map small-map"></div></div>
+        {% endif %}
+    </section>
+
+    <aside>
+        {% if es_dueno %}
+            <div class="card">
+                <h2>Administrar</h2>
+                <div class="stack">
+                    <a class="neu-button btn-sm" href="{% url 'objetos:editar' objeto.pk %}">Editar</a>
+                    {% if objeto.estado == 'activo' %}
+                    <form method="post" action="{% url 'objetos:recuperado' objeto.pk %}">{% csrf_token %}
+                        <button class="neu-button btn-sm primary" type="submit">Marcar como recuperado</button></form>
+                    {% endif %}
+                    <form method="post" action="{% url 'objetos:eliminar' objeto.pk %}" onsubmit="return confirm('¿Eliminar este reporte?');">{% csrf_token %}
+                        <button class="neu-button btn-sm danger" type="submit">Eliminar</button></form>
+                </div>
+            </div>
+        {% elif objeto.estado == 'activo' %}
+            <div class="card">
+                <h2>{% if objeto.tipo == 'perdido' %}¿Lo encontraste?{% else %}¿Es tuyo?{% endif %}</h2>
+                <p class="muted small">Envía un mensaje a quien publicó el reporte.</p>
+                <form method="post">{% csrf_token %}
+                    <div class="neu-field">{{ form.texto }}</div>
+                    {% for e in form.texto.errors %}<p class="field-error">{{ e }}</p>{% endfor %}
+                    <button class="neu-button btn-sm primary full" type="submit">Enviar mensaje</button>
+                </form>
+            </div>
+        {% else %}
+            <div class="card"><p class="muted">Este objeto ya fue recuperado.</p></div>
+        {% endif %}
+    </aside>
+</div>
+{% endblock %}
+{% block scripts %}
+{% if objeto.tiene_ubicacion %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    const ll = [{{ objeto.latitud|stringformat:"f" }}, {{ objeto.longitud|stringformat:"f" }}];
+    const map = L.map("map").setView(ll, 17);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "&copy; OpenStreetMap" }).addTo(map);
+    L.marker(ll).addTo(map);
+</script>
+{% endif %}
+{% endblock %}
